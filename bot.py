@@ -19,14 +19,12 @@ class Bot(commands.AutoShardedBot):
     async def startup(self) -> None:
         await self.wait_until_ready()
         await self.tree.sync()
-        self.ban_user_task.start()
-        self.leaderboard_task.start()
        
     async def load_cogs(self) -> None:
         for ext in COGS:
             try:
                 await self.load_extension(ext)
-                logger.info(f"{ext} loaded!")
+                print(f"{ext} loaded!")
             except Exception as e:
                 print(f"Cant load {ext}")
                 raise e
