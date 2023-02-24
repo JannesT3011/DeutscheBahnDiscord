@@ -3,21 +3,35 @@ from discord.ext import commands
 from discord import app_commands
 from utils import get_station_id, get_journey_info
 from typing import Optional
+from datetime import datetime
+from dateutil import parser
 
 class Route(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def format_dt(self, time):
+        dt_parser = parser.isoparse(time)
+        return datetime.strftime(dt_parser, "%d.%m.%y %H:%M")
 
     def format_journey_info(self, start, end, data: dict, price) -> discord.Embed:
         embed = discord.Embed(title=f"{start} ➡️ {end}")
         for stop in data:
-            embed.add_field(
-                name=f"{stop['direction']} - {stop['line']['name']}",
-                value=f"From: {stop['origin']['name']} Gl.{stop['departurePlatform']}\nTo: {stop['destination']['name']} Gl.{stop['arrivalPlatform']}\n⬇️",
-                inline=False
-            ) # TODO add times!
-            # value: From - To, Departure Arrival, Platform, bei ice/ic auch auslastung
+            try:
+                load_factor = f"\n**Auslastung:** {stop['loadFactor']}"
+            except KeyError:
+                load_factor = ""
+            try:
+                dep_time = self.format_dt(stop["plannedDeparture"])
+                ar_time = self.format_dt(stop["plannedArrival"])
+
+                embed.add_field(
+                    name=f"{stop['line']['name']} - {stop['direction']}",
+                    value=f"**From:** {stop['origin']['name']} Gl.{stop['departurePlatform']}\n**Departure:** {dep_time}\n**To:** {stop['destination']['name']} Gl.{stop['arrivalPlatform']}\n**Arrival:** {ar_time}{load_factor}\n⬇️",
+                    inline=False
+                ) 
+            except:
+                continue # Skips "laufzeit" (von tief zu normal)
         
         embed.add_field(name="Price:", value="Can't get price!" if price is None else f"{price}€", inline=False)
         return embed
