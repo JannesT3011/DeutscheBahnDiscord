@@ -22,7 +22,7 @@ class Route(commands.Cog):
             except KeyError:
                 load_factor = ""
             try:
-                dep_time = self.format_dt(stop["plannedDeparture"])
+                dep_time = self.format_dt(stop["plannedDeparture"]) # arrivalDelay
                 ar_time = self.format_dt(stop["plannedArrival"])
 
                 embed.add_field(
@@ -37,13 +37,16 @@ class Route(commands.Cog):
         return embed
 
 
-    @app_commands.command(name='route', description="Plan your DB route!")
+    @app_commands.command(name='route', description="Plan your DB route!") # Later departure
     @app_commands.describe(start="The start train station", end="The end destination of your trip")
-    async def route_command(self, interaction: discord.Interaction, start: Optional[str]="Darmstadt Hbf", end: Optional[str]="Hamburg Hbf"):
+    async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]):
         start_id = await get_station_id(start)
         end_id = await get_station_id(end)
-        # TODO error handler if one is 0
         journey_info = await get_journey_info(start_id, end_id)
+
+        if start_id == 0 or end_id == 0 or journey_info[0] == 0:
+            return await interaction.response.send_message("Error", ephemeral=True)
+
         route = journey_info[0]
         price = journey_info[1]
         return await interaction.response.send_message(embed=self.format_journey_info(start, end, route, price))
