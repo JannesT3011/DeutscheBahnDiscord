@@ -1,5 +1,5 @@
 from .get_route_data import get_station_info, get_journey_info
-from .get_trips_data import get_train_info, get_train_stopovers
+from .get_trips_data import get_trip_id, get_trip_info
 from .get_stops_data import get_departure_data
 
 from datetime import datetime, timedelta

@@ -9,7 +9,7 @@ class Route(commands.Cog):
         self.bot = bot
 
     def format_journey_info(self, start, end, data: dict, price) -> discord.Embed:
-        embed = discord.Embed(title=f"{start} ➡️ {end}")
+        embed = discord.Embed(title=f"{start} ➡️ {end}", color=self.bot.embed_color)
         for stop in data:
             try:
                 load_factor = f"\n**Auslastung:** {stop['loadFactor']}"

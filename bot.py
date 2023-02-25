@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands, tasks
 from config import *
 from datetime import datetime, timedelta
+from discord import Color
 
 
 class Bot(commands.AutoShardedBot):
@@ -14,6 +15,7 @@ class Bot(commands.AutoShardedBot):
             intents=intents,
             activity=discord.Game(name=ACTIVITY)
         )
+        self.embed_color = Color.from_str(EMBED_COLOR)
     
     # STARTUP FUNCTIONS
     async def startup(self) -> None:

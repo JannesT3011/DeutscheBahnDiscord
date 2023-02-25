@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_train_info, get_train_stopovers
+from utils import get_trip_id, get_trip_info, format_dt
 
 class Traininfo(commands.Cog):
     def __init__(self, bot):
@@ -12,20 +12,21 @@ class Traininfo(commands.Cog):
     async def zuginfo_command(self, interaction: discord.Interaction, zugnummer: str):
         await interaction.response.defer(thinking=True)
 
-        data = await get_train_info(zugnummer)
-        if data == 0:
+        id = await get_trip_id(zugnummer)
+        if id == (0):
             return await interaction.followup.send("No Train found!", ephemeral=True)
         
-        stops = await get_train_stopovers(data["id"])
+        info = await get_trip_info(id)
         
         embed = discord.Embed(
-            title=f"{zugnummer} - Info",
-            description=f"{data['origin']['name']} ➡️ {data['destination']['name']}"
+            title=f"{zugnummer.upper()} - Info",
+            description=f"**{info[0]}** ➡️ **{info[1]}**",
+            color=self.bot.embed_color
         )
 
-        embed.add_field( #Stops doesnt show up!
+        embed.add_field( # TODO planed times daneben (+verspätung)
             name="Stops:",
-            value=", \n".join(stop["stop"]["name"] for stop in stops)
+            value=", \n".join('**'+stop["stop"]["name"]+'**' f' ({format_dt(stop["departure"]).split(" ")[1] if stop["arrival"] is None else format_dt(stop["arrival"]).split(" ")[1]})' for stop in info[2])
         )
 
         return await interaction.followup.send(embed=embed)
