@@ -10,13 +10,13 @@ class Traininfo(commands.Cog):
     @app_commands.command(name="zuginfo", description="Siehe Infos über einen Zug")
     @app_commands.describe(zugnummer="Die Nummer des Zuges")
     async def zuginfo_command(self, interaction: discord.Interaction, zugnummer: str):
-        await interaction.response.defer()
+        await interaction.response.defer(thinking=True)
 
         data = await get_train_info(zugnummer)
-        stops = await get_train_stopovers(data["id"])
-
         if data == 0:
             return await interaction.followup.send("No Train found!", ephemeral=True)
+        
+        stops = await get_train_stopovers(data["id"])
         
         embed = discord.Embed(
             title=f"{zugnummer} - Info",
@@ -24,7 +24,7 @@ class Traininfo(commands.Cog):
         )
 
         embed.add_field( #Stops doesnt show up!
-            name="Stops",
+            name="Stops:",
             value=", \n".join(stop["stop"]["name"] for stop in stops)
         )
 
