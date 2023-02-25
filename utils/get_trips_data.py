@@ -6,7 +6,7 @@ async def get_train_info(zugnr: str) -> dict:
     year, month, day = now.year, now.month, now.day
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://v6.db.transport.rest/trips?query={zugnr}&onlyCurrentlyRunning=false&fromWhen={year}-{month}-{day} 00:00&untilWhen=2023-02-25%2023:59") as response:
+        async with session.get(f"https://v6.db.transport.rest/trips?query={zugnr}&onlyCurrentlyRunning=false&fromWhen={year}-{month}-{day} 00:01&untilWhen={year}-{month}-{day}%2023:59&operatorNames=DB%20Fernverkehr%20AG") as response:
             if response.status != 200:
                 return 0
             
