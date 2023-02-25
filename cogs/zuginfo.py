@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_train_info
+from utils import get_train_info, get_train_stopovers
 
 class Traininfo(commands.Cog):
     def __init__(self, bot):
@@ -11,19 +11,22 @@ class Traininfo(commands.Cog):
     @app_commands.describe(zugnummer="Die Nummer des Zuges")
     async def zuginfo_command(self, interaction: discord.Interaction, zugnummer: str):
         await interaction.response.defer()
+
         data = await get_train_info(zugnummer)
+        stops = await get_train_stopovers(data["id"])
 
         if data == 0:
-            return await interaction.followup.send("Error!", ephemeral=True)
+            return await interaction.followup.send("No Train found!", ephemeral=True)
         
         embed = discord.Embed(
             title=f"{zugnummer} - Info",
             description=f"{data['origin']['name']} ➡️ {data['destination']['name']}"
         )
-        #embed.add_field( Stops doesnt show up!
-        #    name="Stops",
-        #    value=", \n".join(stop["stop"]["name"] for stop in data["stopovers"])
-        #)
+
+        embed.add_field( #Stops doesnt show up!
+            name="Stops",
+            value=", \n".join(stop["stop"]["name"] for stop in stops)
+        )
 
         return await interaction.followup.send(embed=embed)
 
