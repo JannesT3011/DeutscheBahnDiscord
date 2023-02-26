@@ -9,14 +9,19 @@ class Departures(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name='departures', description="Departure of given Station")
-    @app_commands.describe(station="The Station you want to get the departures", longdistance="Only show long distance Trains", duration="Period of time (minutes)")
+    @app_commands.describe(station="The Station you want to see the departures", longdistance="Only show long distance Trains", duration="Period of time (hours)")
     async def departures_command(self, interaction: discord.Interaction, station: str, longdistance: Optional[Literal["Yes", "No"]], duration: Optional[app_commands.Range[int, 1, 24]]=1):
-        await interaction.response.defer(thinking=True)
+        """SEE THE STATION DEPARTURES: TRAIN, DESTINATION, DEPARTURE, PLATFORM"""
+        await interaction.response.defer(thinking=True, ephemeral=True)
 
         longdistance = True if longdistance == "Yes" else False
         longdistance_str = " for Long Distance Trains" if longdistance else ""
 
         station_id = await get_station_info(station)
+
+        if station_id == 0:
+            return await interaction.followup.send("No data found!", ephemeral=True)
+        
         data = await get_departure_data(station_id[0], longdistance, duration*60)
         
         embed = discord.Embed(
@@ -39,6 +44,7 @@ class Departures(commands.Cog):
             embed.set_footer(text="*for the next hour")
 
         return await interaction.followup.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(Departures(bot))

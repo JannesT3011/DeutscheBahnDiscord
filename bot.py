@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands, tasks
 from config import *
-from datetime import datetime, timedelta
 from discord import Color
+import logging
 
+logging.basicConfig(filename="logging.log", encoding='utf-8', level=logging.DEBUG)
 
 class Bot(commands.AutoShardedBot):
     def __init__(self, **kwargs):
@@ -27,16 +28,22 @@ class Bot(commands.AutoShardedBot):
             try:
                 await self.load_extension(ext)
                 print(f"{ext} loaded!")
+                logging.info(f"{ext} loaded!")
             except Exception as e:
-                print(f"Cant load {ext}")
+                logging.error(f"Cant load {ext}")
                 raise e
         
     async def setup_hook(self) -> None:
         await self.load_cogs()
-        # self.tree.on_error = self.on_app_command_error
+        self.tree.on_error = self.on_app_command_error
         self.loop.create_task(self.startup())
-
     
+    # ERROR HANDLER:
+    async def on_app_command_error(self, interaction: discord.Interaction, error):
+        if isinstance(error, discord.app_commands.errors.CommandInvokeError):
+            logging.warning(error)
+            return await interaction.response.send_message("Something went wrong!", ephemeral=True)
+
     # EVENTS:
     async def on_message(self, message: discord.Message):
         if message.author.bot:

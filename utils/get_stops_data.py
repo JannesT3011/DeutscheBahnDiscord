@@ -1,6 +1,10 @@
 import aiohttp
 
-async def get_departure_data(stationid: int, only_fernverkehr:bool=False, duration:int=60):
+async def get_departure_data(stationid: int, only_fernverkehr:bool=False, duration:int=60) -> dict:
+    """
+    GET DEPARTURE DATA OF GIVEN STATIONID
+    RETURNS: DEPARTURES
+    """
     url = f"https://v6.db.transport.rest/stops/{stationid}/departures?bus=false&tram=false&taxi=false&subway=false&results=13&duration={duration}"
     if only_fernverkehr:
         url = url + "&nationalExpress=true&national=true&regional=false&suburban=false"

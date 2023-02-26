@@ -6,11 +6,19 @@ from datetime import datetime, timedelta
 from dateutil import parser
 
 def format_dt(time):
+    """
+    FORMAT API TIME (e.g: 2023-02-25T16:48:00+01:00)
+    TO: "%d.%m.%y %H:%M" format
+    """
     dt_parser = parser.isoparse(time)
 
     return datetime.strftime(dt_parser, "%d.%m.%y %H:%M")
 
+
 def calc_delay(planned: str, actual: str) -> int:
+    """
+    CALC THE DELAY (DELTA) BETWEEN TO GIVEN TIMES
+    """
     planned_dt = datetime.strptime(planned, "%d.%m.%y %H:%M")
     actual_dt = datetime.strptime(actual, "%d.%m.%y %H:%M")
 
