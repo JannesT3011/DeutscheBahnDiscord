@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 from utils import get_station_info, get_departure_data, format_dt, calc_delay
 from typing import Optional, Literal
+from discord.ui import View, Button
 
 class Departures(commands.Cog):
     def __init__(self, bot):
@@ -42,8 +43,12 @@ class Departures(commands.Cog):
         
         if duration == 1:
             embed.set_footer(text="*for the next hour")
+        
+        view = View()
+        url = f"https://www.bahnhof.de/{station_id[1].replace(' ', '-')}"
+        view.add_item(Button(label="See station infos", url=url))
 
-        return await interaction.followup.send(embed=embed)
+        return await interaction.followup.send(embed=embed, view=view)
 
 
 async def setup(bot):
