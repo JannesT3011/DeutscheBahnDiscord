@@ -14,7 +14,7 @@ class Route(commands.Cog):
         embed = discord.Embed(title=f"{start} ➡️ {end}", color=self.bot.embed_color)
         for stop in data:
             try:
-                load_factor = f"\n**Auslastung:** {stop['loadFactor']}"
+                load_factor = f"\n**👥:** {stop['loadFactor']}\n"
             except KeyError:
                 load_factor = ""
             try:
