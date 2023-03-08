@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_station_info, get_journey_info, format_dt
+from utils import get_station_info, get_journey_info, format_dt, str_to_time
 from typing import Optional
 
 
@@ -12,6 +12,13 @@ class Route(commands.Cog):
     def format_journey_info(self, start, end, data: dict, price) -> discord.Embed:
         """CREATED THE EMBED FOR THE ROUTE"""
         embed = discord.Embed(title=f"{start} ➡️ {end}", color=self.bot.embed_color)
+
+        start_time = str_to_time(format_dt(data[0]["plannedDeparture"]))
+        end_time = str_to_time(format_dt(data[len(data)-1]["plannedArrival"]))
+
+        trip_duration = str(end_time-start_time).split(":")
+        embed.description = f"**Duration:** {trip_duration[0]}:{trip_duration[1]}"
+
         for stop in data:
             try:
                 load_factor = f"\n**👥:** {stop['loadFactor']}\n"
@@ -41,10 +48,13 @@ class Route(commands.Cog):
 
         start_id = await get_station_info(start)
         end_id = await get_station_info(end)
-        journey_info = await get_journey_info(start_id[0], end_id[0])
 
-        if start_id == 0 or end_id == 0 or journey_info[0] == 0:
-            return await interaction.followup.send("Error", ephemeral=True)
+        if start_id == (0) or end_id == (0):
+            return await interaction.followup.send("No data found", ephemeral=True)
+
+        journey_info = await get_journey_info(start_id[0], end_id[0])
+        if journey_info[0] == (0):
+            return await interaction.followup.send("No data found", ephemeral=True)
 
         route = journey_info[0]
         price = journey_info[1]
