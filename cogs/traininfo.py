@@ -27,10 +27,13 @@ class Traininfo(commands.Cog):
             color=self.bot.embed_color
         )
 
-        embed.add_field(
-            name="Stops:",
-            value=", \n".join('**'+stop["stop"]["name"]+'**' f' ({format_dt(stop["departure"]).split(" ")[1] if stop["arrival"] is None else format_dt(stop["arrival"]).split(" ")[1]})' for stop in info[2])
-        )
+        try:
+            embed.add_field(
+                name="Stops:",
+                value=", \n".join('**'+stop["stop"]["name"]+'**' f' ({format_dt(stop["departure"]).split(" ")[1] if stop["arrival"] is None else format_dt(stop["arrival"]).split(" ")[1]})' for stop in info[2])
+            )
+        except:
+            pass
 
         return await interaction.followup.send(embed=embed)
 
