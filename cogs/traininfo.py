@@ -33,7 +33,12 @@ class Traininfo(commands.Cog):
                 value=", \n".join('**'+stop["stop"]["name"]+'**' f' ({format_dt(stop["departure"]).split(" ")[1] if stop["arrival"] is None else format_dt(stop["arrival"]).split(" ")[1]})' for stop in info[2])
             )
         except:
-            pass
+            embed.add_field(
+                name="Stops:",
+                value=", \n".join('**'+stop["stop"]["name"]+'**'for stop in info[2])
+            )
+        finally:
+            pass # Cant load stops!
 
         return await interaction.followup.send(embed=embed)
 
