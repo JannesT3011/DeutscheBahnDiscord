@@ -22,7 +22,7 @@ class Traininfo(commands.Cog):
         info = await get_trip_info(id)
         
         embed = discord.Embed(
-            title=f"{zugnummer.upper()} - Info",
+            title=f"{info[3]} - Info",
             description=f"**{info[0]}** ➡️ **{info[1]}**",
             color=self.bot.embed_color
         )

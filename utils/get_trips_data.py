@@ -6,7 +6,7 @@ async def get_trip_id(zugnr: str) -> str:
     GET THE TRIP ID OF GIVEN TRAIN
     RETURNS: TRIPID
     """
-    now = datetime.now()
+    now = datetime.utcnow()
     year, month, day = now.year, now.month, now.day
 
     async with aiohttp.ClientSession() as session:
@@ -31,4 +31,4 @@ async def get_trip_info(tripid) -> tuple:
             
             data = await response.json()
 
-            return (data["trip"]["origin"]["name"], data["trip"]["destination"]["name"], data["trip"]["stopovers"])
+            return (data["trip"]["origin"]["name"], data["trip"]["destination"]["name"], data["trip"]["stopovers"], data["trip"]["line"]["name"])
