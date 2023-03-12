@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_station_info, get_journey_info, format_dt, str_to_time
+from utils import get_station_info, get_journey_info, format_dt, str_to_time, calc_delay
 from typing import Optional
 
 
@@ -12,6 +12,7 @@ class Route(commands.Cog):
     def format_journey_info(self, start, end, data: dict, price) -> discord.Embed:
         """CREATED THE EMBED FOR THE ROUTE"""
         embed = discord.Embed(title=f"{start} ➡️ {end}", color=self.bot.embed_color)
+        embed.set_footer(text="All data without guarantee")
 
         start_time = str_to_time(format_dt(data[0]["plannedDeparture"]))
         end_time = str_to_time(format_dt(data[len(data)-1]["plannedArrival"]))
@@ -26,11 +27,15 @@ class Route(commands.Cog):
                 load_factor = ""
             try:
                 dep_time = format_dt(stop["plannedDeparture"]) # arrivalDelay
+                dep_delay = calc_delay(dep_time, format_dt(stop["departure"]))
+                dep_delay_str = f"(+{dep_delay})" if dep_delay != 0 else ""
                 ar_time = format_dt(stop["plannedArrival"])
+                ar_delay = calc_delay(ar_time, format_dt(stop["arrival"]))
+                ar_delay_str = f"(+{ar_delay})" if ar_delay != 0 else ""
 
                 embed.add_field(
                     name=f"{stop['line']['name']} - {stop['direction']}",
-                    value=f"**From:** {stop['origin']['name']} Gl.{stop['departurePlatform']}\n**Departure:** {dep_time}\n**To:** {stop['destination']['name']} Gl.{stop['arrivalPlatform']}\n**Arrival:** {ar_time}{load_factor}\n⬇️",
+                    value=f"**From:** {stop['origin']['name']} Gl.{stop['departurePlatform']}\n**Departure:** {dep_time} {dep_delay_str}\n**To:** {stop['destination']['name']} Gl.{stop['arrivalPlatform']}\n**Arrival:** {ar_time} {ar_delay_str}{load_factor}\n⬇️",
                     inline=False
                 ) 
             except:

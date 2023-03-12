@@ -26,6 +26,7 @@ class Traininfo(commands.Cog):
             description=f"**{info[0]}** ➡️ **{info[1]}**",
             color=self.bot.embed_color
         )
+        embed.set_footer(text="All data without guarantee")
 
         try:
             embed.add_field(

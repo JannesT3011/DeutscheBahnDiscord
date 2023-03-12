@@ -6,7 +6,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(name='help')
+    @app_commands.command(name='help', description="View all commands")
     async def help_command(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Deutsche Bahn Discord Bot - Help",
