@@ -44,6 +44,8 @@ class Bot(commands.AutoShardedBot):
         if isinstance(error, WrongDateFormat):
             return await interaction.followup.send("Wrong date format (dd.mm.yyyy hh:mm)", ephemeral=True)
         elif isinstance(error, discord.app_commands.CommandInvokeError):
+            channel = await self.fetch_channel(1084802176464998450)
+            await channel.send(f"Error:```{error}```")
             return await interaction.followup.send("Something went wrong!", ephemeral=True)
 
     # EVENTS:
