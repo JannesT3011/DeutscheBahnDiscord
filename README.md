@@ -42,8 +42,14 @@ EMBED_COLOR = "#a21917"
 2. Run the bot with `python3 bot.py`
 
 ### Todos:
-- [ ] add date to /route
+- [X] add date to /route
+- [X] departures when
 - [ ] add loyaltyCard 
 - [ ] price analyze
 - [ ] reminder for cheap prices
 - [ ] reminder for journy 
+- [ ] Price Calander (like bahn.guru)
+- [ ] /price from to age card
+- [X] add duration to /route
+- [ ] multiple pages for /route and /departures
+- [ ] Watchlist for routes/trains/stations
