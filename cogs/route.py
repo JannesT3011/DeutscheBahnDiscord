@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_station_info, get_journey_info, format_dt, str_to_time, calc_delay
+from utils import get_station_info, get_journey_info, format_dt, str_to_time, calc_delay, format_dt_for_api
 from typing import Optional
 
 
@@ -47,7 +47,7 @@ class Route(commands.Cog):
 
     @app_commands.command(name='route', description="Plan your DB route!") # Later departure
     @app_commands.describe(start="The start train station", end="The end destination of your trip")
-    async def route_command(self, interaction: discord.Interaction, start: str, end: str): # , date: Optional[str]
+    async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]): # 
         """GET INFOS ABOUT A ROUTE (START>END)"""
         await interaction.response.defer(thinking=True, ephemeral=True)
 
@@ -57,7 +57,7 @@ class Route(commands.Cog):
         if start_id == (0) or end_id == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
 
-        journey_info = await get_journey_info(start_id[0], end_id[0])
+        journey_info = await get_journey_info(start_id[0], end_id[0], format_dt_for_api(date))
         if journey_info[0] == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
 
