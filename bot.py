@@ -4,6 +4,7 @@ from config import *
 from discord import Color
 import logging
 
+from utils import WrongDateFormat
 #logging.basicConfig(filename="logging.log", encoding='utf-8', level=logging.DEBUG)
 
 class Bot(commands.AutoShardedBot):
@@ -40,9 +41,10 @@ class Bot(commands.AutoShardedBot):
 
     # ERROR HANDLER:
     async def on_app_command_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, discord.app_commands.errors.CommandInvokeError):
-            logging.warning(error)
-            return await interaction.response.send_message("Something went wrong!", ephemeral=True)
+        if isinstance(error, WrongDateFormat):
+            return await interaction.followup.send("Wrong date format (dd.mm.yyyy hh:mm)", ephemeral=True)
+        elif isinstance(error, discord.app_commands.CommandInvokeError):
+            return await interaction.followup.send("Something went wrong!", ephemeral=True)
 
     # EVENTS:
     async def on_message(self, message: discord.Message):
