@@ -47,7 +47,7 @@ class Route(commands.Cog):
 
     @app_commands.command(name='route', description="Plan your DB route!") # Later departure
     @app_commands.describe(start="The start train station", end="The end destination of your trip")
-    async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]): # 
+    async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]):
         """GET INFOS ABOUT A ROUTE (START>END)"""
         await interaction.response.defer(thinking=True, ephemeral=True)
 
@@ -57,10 +57,10 @@ class Route(commands.Cog):
         if start_id == (0) or end_id == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
 
-        if when is not None:
-            when = format_dt_for_api(when)
+        if date is not None:
+            date = format_dt_for_api(date)
         
-        journey_info = await get_journey_info(start_id[0], end_id[0], format_dt_for_api(date))
+        journey_info = await get_journey_info(start_id[0], end_id[0], date)
 
         if journey_info[0] == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
