@@ -29,7 +29,10 @@ class Departures(commands.Cog):
         if station_id == 0:
             return await interaction.followup.send("No data found!", ephemeral=True)
         
-        data = await get_departure_data(station_id[0], onlylongdistance, duration*60, format_dt_for_api(when))
+        if when is not None:
+            when = format_dt_for_api(when)
+            
+        data = await get_departure_data(station_id[0], onlylongdistance, duration*60, when)
         
         embed = discord.Embed(
             title=f"{station_id[1]} Departures{longdistance_str}:{'*' if duration==1 else ''}",

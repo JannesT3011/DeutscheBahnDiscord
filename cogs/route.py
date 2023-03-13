@@ -57,7 +57,11 @@ class Route(commands.Cog):
         if start_id == (0) or end_id == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
 
+        if when is not None:
+            when = format_dt_for_api(when)
+        
         journey_info = await get_journey_info(start_id[0], end_id[0], format_dt_for_api(date))
+
         if journey_info[0] == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
 
