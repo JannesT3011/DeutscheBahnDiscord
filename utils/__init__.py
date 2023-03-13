@@ -2,8 +2,10 @@ from .get_route_data import get_station_info, get_journey_info
 from .get_trips_data import get_trip_id, get_trip_info
 from .get_stops_data import get_departure_data
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import parser
+
+import discord
 
 def format_dt(time) -> str:
     """
@@ -30,3 +32,16 @@ def str_to_time(str_time) -> datetime: # Input: DD.MM.YY hh:mm
     TO: "%d.%m.%y %H:%M" format
     """
     return datetime.strptime(str_time, "%d.%m.%y %H:%M")
+
+class WrongDateFormat(discord.app_commands.AppCommandError):
+    pass
+
+def format_dt_for_api(time) -> str:
+    """
+    FORMAT GIVEN TIME TO CORRECT API TIME (%m.%d.%y %H:%M")
+    """
+    try:    
+        dt = datetime.strptime(time, "%d.%m.%y %H:%M") - timedelta(hours=2)
+        return datetime.strftime(dt, "%m.%d.%y %H:%M")
+    except:
+        raise WrongDateFormat 

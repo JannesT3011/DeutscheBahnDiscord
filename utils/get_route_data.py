@@ -1,5 +1,4 @@
 import aiohttp
-from typing import Literal
 
 async def get_station_info(station: str) -> tuple:
     """
@@ -19,13 +18,17 @@ async def get_station_info(station: str) -> tuple:
 
             return (data[first]["id"], data[first]["name"])
 
-async def get_journey_info(start: int, end: int) -> tuple:
+async def get_journey_info(start: int, end: int, when=None) -> tuple:
     """
     GET THE JOUNRY INFO
     RETURNS: (LEGS, PRICE)
     """
     async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://v6.db.transport.rest/journeys?from={start}&to={end}&results=1") as response:
+        url = f"https://v6.db.transport.rest/journeys?from={start}&to={end}&results=1"
+        if when != None:
+            url+=f"&departure={when}"
+
+        async with session.get(url) as response:
             if response.status != 200:
                 return (0)
             

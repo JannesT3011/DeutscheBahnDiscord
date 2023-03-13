@@ -1,6 +1,7 @@
 import aiohttp
+from datetime import datetime
 
-async def get_departure_data(stationid: int, only_fernverkehr:bool=False, duration:int=60) -> dict:
+async def get_departure_data(stationid: int, only_fernverkehr:bool=False, duration:int=60, when:str=None) -> dict:
     """
     GET DEPARTURE DATA OF GIVEN STATIONID
     RETURNS: DEPARTURES
@@ -8,6 +9,8 @@ async def get_departure_data(stationid: int, only_fernverkehr:bool=False, durati
     url = f"https://v6.db.transport.rest/stops/{stationid}/departures?bus=false&tram=false&taxi=false&subway=false&results=13&duration={duration}"
     if only_fernverkehr:
         url = url + "&nationalExpress=true&national=true&regional=false&suburban=false"
+    if when != None:
+        url = url + f"&when={when}"
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
