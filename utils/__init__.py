@@ -41,7 +41,7 @@ def format_dt_for_api(time) -> str:
     FORMAT GIVEN TIME TO CORRECT API TIME (%m.%d.%y %H:%M")
     """
     try:    
-        dt = datetime.strptime(time, "%d.%m.%y %H:%M") - timedelta(hours=1)
+        dt = datetime.strptime(time, "%d.%m.%y %H:%M") - timedelta(hours=2)
         return datetime.strftime(dt, "%m.%d.%y %H:%M")
     except:
         raise WrongDateFormat 
