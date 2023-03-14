@@ -46,7 +46,7 @@ class Route(commands.Cog):
 
 
     @app_commands.command(name='route', description="Plan your DB route!") # Later departure
-    @app_commands.describe(start="The start train station", end="The end destination of your trip")
+    @app_commands.describe(start="The start train station", end="The end destination of your trip", date="Departure of your route")
     async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]):
         """GET INFOS ABOUT A ROUTE (START>END)"""
         await interaction.response.defer(thinking=True, ephemeral=True)
