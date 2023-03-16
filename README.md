@@ -5,13 +5,13 @@ The bot is using the [Hafas-Client](https://github.com/public-transport/hafas-cl
 
 
 ### Commands:
-/route [start] [end] (date) -> Get a complete route description for you trip
-/trainfino [trainNo] -> Get infos about a train
-/departures [station] (onlyLongDistance) (duration in hours) (date) -> Get staion departures
+/route [start] [end] (date) -> Get a complete route description for you trip <br />
+/trainfino [trainNo] -> Get infos about a train <br />
+/departures [station] (onlyLongDistance) (duration in hours) (date) -> Get staion departures <br />
 
-[] arguments = requires
-() arguments = optional
-date format = dd-mm-yy HH:MM
+[] arguments = requires <br />
+() arguments = optional <br />
+date format = dd-mm-yy HH:MM <br />
 
 ### Examples:
 
