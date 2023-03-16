@@ -11,13 +11,13 @@ class Departures(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name='departures', description="Departure of given Station")
-    @app_commands.describe(station="The Station you want to see the departures", onlylongdistance="Only show long distance Trains", duration="Period of time (hours)", when="Date (dd-mm-yy HH:MM)")
+    @app_commands.describe(station="The Station you want to see the departures", onlylongdistance="Only show long distance Trains", duration="Period of time (hours)", date="Date (dd-mm-yy HH:MM)")
     async def departures_command(self, 
                                  interaction: discord.Interaction, 
                                  station: str, 
                                  onlylongdistance: Optional[Literal["Yes", "No"]], 
                                  duration: Optional[app_commands.Range[int, 1, 24]]=1, 
-                                 when: Optional[str]=None):
+                                 date: Optional[str]=None):
         """SEE THE STATION DEPARTURES: TRAIN, DESTINATION, DEPARTURE, PLATFORM"""
         await interaction.response.defer(thinking=True, ephemeral=True)
 
@@ -29,10 +29,10 @@ class Departures(commands.Cog):
         if station_id == 0:
             return await interaction.followup.send("No data found!", ephemeral=True)
         
-        if when is not None:
-            when = format_dt_for_api(when)
+        if date is not None:
+            date = format_dt_for_api(date)
             
-        data = await get_departure_data(station_id[0], onlylongdistance, duration*60, when)
+        data = await get_departure_data(station_id[0], onlylongdistance, duration*60, date)
         
         embed = discord.Embed(
             title=f"{station_id[1]} Departures{longdistance_str}:{'*' if duration==1 else ''}",
