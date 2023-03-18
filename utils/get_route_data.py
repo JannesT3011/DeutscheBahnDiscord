@@ -18,20 +18,19 @@ async def get_station_info(station: str) -> tuple:
 
             return (data[first]["id"], data[first]["name"])
 
-async def get_journey_info(start: int, end: int, when=None) -> tuple:
+async def get_journey_info(start: int, end: int, when=None) -> list:
     """
     GET THE JOUNRY INFO
     RETURNS: (LEGS, PRICE)
     """
     async with aiohttp.ClientSession() as session:
-        url = f"https://v6.db.transport.rest/journeys?from={start}&to={end}&results=1"
+        url = f"https://v6.db.transport.rest/journeys?from={start}&to={end}"
         if when != None:
             url+=f"&departure={when}"
 
         async with session.get(url) as response:
             if response.status != 200:
-                return (0)
+                return [0]
             
             data = await response.json()
-
-            return (data["journeys"][0]["legs"], data["journeys"][0]["price"])
+            return data["journeys"]

@@ -5,14 +5,57 @@ from utils import get_station_info, get_journey_info, format_dt, str_to_time, ca
 from typing import Optional
 
 
+class RouteView(discord.ui.View):
+
+    def __init__(self, user: int, routes: list, index):
+        super(RouteView, self).__init__(
+            timeout=120
+        )
+        self.user = user
+        self.interaction = None
+        self.max = len(routes)
+        self.routes = routes
+        self.index = index
+        self.pressed = False
+
+        back_button = discord.ui.Button(emoji="⬅️")
+        back_button.callback = self._back
+        self.add_item(back_button)
+
+        next_button = discord.ui.Button(emoji="➡️")
+        next_button.callback = self._next
+        self.add_item(next_button)
+    
+    async def _back(self, interaction: discord.Interaction):
+        self.index = self.index - 1 if self.index != 0 else self.max
+        if self.index == 0: # Somehow useless but doesnt work with this (idk why)
+            self.index = self.max 
+        self.interaction = interaction
+        self.pressed = True
+        self.stop()
+
+    async def _next(self, interaction: discord.Interaction):
+        self.index = self.index + 1 if self.index != self.max else 1
+        self.interaction = interaction
+        self.pressed = True
+        self.stop()
+
+    async def on_timeout(self) -> None:
+        for item in self.children:
+            item.disabled = True
+        await self.message.edit(view=self)
+        self.index = None
+        self.stop()
+
+
 class Route(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def format_journey_info(self, start, end, data: dict, price) -> discord.Embed:
+    def format_journey_info(self, start, end, data: dict, price, index, max) -> discord.Embed:
         """CREATED THE EMBED FOR THE ROUTE"""
         embed = discord.Embed(title=f"{start} ➡️ {end}", color=self.bot.embed_color)
-        embed.set_footer(text="All data without guarantee")
+        embed.set_footer(text=f"All data without guarantee ({index}/{max})")
 
         start_time = str_to_time(format_dt(data[0]["plannedDeparture"]))
         end_time = str_to_time(format_dt(data[len(data)-1]["plannedArrival"]))
@@ -49,7 +92,11 @@ class Route(commands.Cog):
     @app_commands.describe(start="The start train station", end="The end destination of your trip", date="Departure of your route (dd-mm-yy HH:MM)")
     async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]):
         """GET INFOS ABOUT A ROUTE (START>END)"""
-        await interaction.response.defer(thinking=True, ephemeral=True)
+        await self.route_backend(interaction, start, end, date)
+
+    async def route_backend(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str], edit:bool=False, index=1):
+        if not edit:
+            await interaction.response.defer(thinking=True, ephemeral=True)
 
         start_id = await get_station_info(start)
         end_id = await get_station_info(end)
@@ -60,15 +107,27 @@ class Route(commands.Cog):
         if date is not None:
             date = format_dt_for_api(date)
         
-        journey_info = await get_journey_info(start_id[0], end_id[0], date)
+        journeys = await get_journey_info(start_id[0], end_id[0], date) 
 
-        if journey_info[0] == (0):
+        if len(journeys) == 0:
             return await interaction.followup.send("No data found", ephemeral=True)
 
-        route = journey_info[0]
-        price = journey_info[1]
+        view = RouteView(interaction.user.id, journeys, index)
 
-        return await interaction.followup.send(embed=self.format_journey_info(start_id[1], end_id[1], route, price))
+        route = journeys[index-1]["legs"]
+        price = journeys[index-1]["price"]
+
+        if edit:
+            await interaction.response.edit_message(embed=self.format_journey_info(start_id[1], end_id[1], route, price, view.index, len(journeys)), view=view)
+        else:
+            view.message = await interaction.followup.send(embed=self.format_journey_info(start_id[1], end_id[1], route, price, index, len(journeys)), view=view)
+
+        await view.wait()
+
+        interaction = view.interaction
+
+        if view.pressed:
+            return await self.route_backend(interaction, start, end, date, edit=True, index=view.index)
 
 
 async def setup(bot):
