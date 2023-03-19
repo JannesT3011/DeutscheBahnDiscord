@@ -1,5 +1,6 @@
 # DeutscheBahnDiscord
 Discord Bot with Deutsche Bahn features
+Plan your Route, see departures of given station or check infos about a Long-Distance train.
 
 The bot is using the [Hafas-Client](https://github.com/public-transport/hafas-client) 
 
@@ -52,5 +53,6 @@ EMBED_COLOR = "#a21917"
 - [ ] Price Calander (like bahn.guru)
 - [ ] /price from to age card
 - [X] add duration to /route
-- [ ] multiple pages for /route and /departures
+- [X] multiple pages for /route 
+- [ ] and /departures
 - [ ] Watchlist for routes/trains/stations
