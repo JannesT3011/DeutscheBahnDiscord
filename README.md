@@ -1,7 +1,9 @@
 # DeutscheBahnDiscord
-Discord Bot with Deutsche Bahn features
-Plan your Route, see departures of given station or check infos about a Long-Distance train.
+Discord Bot with Deutsche Bahn features<br />
+Plan your Route, see departures of given station or check infos about a Long-Distance train.<br />
 
+➡️ [Invite the Bot](https://discord.com/api/oauth2/authorize?client_id=1079486233618677782&permissions=0&scope=bot%20applications.commands)
+<br />
 The bot is using the [Hafas-Client](https://github.com/public-transport/hafas-client) 
 
 
