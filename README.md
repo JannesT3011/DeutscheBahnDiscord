@@ -16,6 +16,10 @@ The bot is using the [Hafas-Client](https://github.com/public-transport/hafas-cl
 () arguments = optional <br />
 date format = dd-mm-yy HH:MM <br />
 
+### Use case (German)?
+- einfache infos über eine Route, Abfahrten und Zuginfos, wenn man man eh im Discord ist
+- > all in one
+
 ### Examples:
 
 #### /route:
