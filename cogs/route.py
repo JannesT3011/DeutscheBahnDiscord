@@ -104,7 +104,7 @@ class Route(commands.Cog):
         if start_id == (0) or end_id == (0):
             return await interaction.followup.send("No data found", ephemeral=True)
 
-        if date is not None:
+        if date is not None and not edit:
             date = format_dt_for_api(date)
         
         journeys = await get_journey_info(start_id[0], end_id[0], date) 
