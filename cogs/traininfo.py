@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_trip_id, get_trip_info, format_dt
+from utils import get_trip_id, get_trip_info, format_dt, NoTrainFound
 
 class Traininfo(commands.Cog):
     def __init__(self, bot):
@@ -17,7 +17,7 @@ class Traininfo(commands.Cog):
         id = await get_trip_id(zugnummer)
         
         if id == (0):
-            return await interaction.followup.send("No Train found!", ephemeral=True)
+            raise NoTrainFound
         
         info = await get_trip_info(id)
         

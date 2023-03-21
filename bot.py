@@ -5,7 +5,7 @@ from discord import Color
 import logging
 from datetime import datetime
 
-from utils import WrongDateFormat, NoDataFound
+from utils import WrongDateFormat, NoDataFound, NoTrainFound
 #logging.basicConfig(filename="logging.log", encoding='utf-8', level=logging.DEBUG)
 
 class Bot(commands.AutoShardedBot):
@@ -47,6 +47,9 @@ class Bot(commands.AutoShardedBot):
             return await interaction.followup.send(embed=ErrorEmbed("Wrong date format (dd.mm.yyyy hh:mm)"), ephemeral=True)
         elif isinstance(error, NoDataFound):
             embed = ErrorEmbed("Can't find any data! Please make sure the station exists")
+            return await interaction.followup.send(embed=embed, ephemeral=True)
+        elif isinstance(error, NoTrainFound):
+            embed = ErrorEmbed("Can't find any data! Please make sure the train exists")
             return await interaction.followup.send(embed=embed, ephemeral=True)
         elif isinstance(error, discord.app_commands.CommandInvokeError):
             channel = await self.fetch_channel(1084802176464998450)

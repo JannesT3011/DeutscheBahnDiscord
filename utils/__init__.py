@@ -39,6 +39,9 @@ class WrongDateFormat(discord.app_commands.AppCommandError):
 class NoDataFound(discord.app_commands.AppCommandError):
     pass
 
+class NoTrainFound(discord.app_commands.AppCommandError):
+    pass
+
 def format_dt_for_api(time) -> str:
     """
     FORMAT GIVEN TIME TO CORRECT API TIME (%m.%d.%y %H:%M")
