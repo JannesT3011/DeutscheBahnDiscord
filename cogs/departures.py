@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_station_info, get_departure_data, format_dt, calc_delay, format_dt_for_api
+from utils import get_station_info, get_departure_data, format_dt, calc_delay, format_dt_for_api, NoDataFound
 from typing import Optional, Literal
 from discord.ui import View, Button
 
@@ -27,7 +27,7 @@ class Departures(commands.Cog):
         station_id = await get_station_info(station)
 
         if station_id == 0:
-            return await interaction.followup.send("No data found!", ephemeral=True)
+            raise NoDataFound
         
         if date is not None:
             date = format_dt_for_api(date)

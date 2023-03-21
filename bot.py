@@ -3,8 +3,9 @@ from discord.ext import commands, tasks
 from config import *
 from discord import Color
 import logging
+from datetime import datetime
 
-from utils import WrongDateFormat
+from utils import WrongDateFormat, NoDataFound
 #logging.basicConfig(filename="logging.log", encoding='utf-8', level=logging.DEBUG)
 
 class Bot(commands.AutoShardedBot):
@@ -15,7 +16,8 @@ class Bot(commands.AutoShardedBot):
             command_prefix="db.",
             description=DESCRIPTION,
             intents=intents,
-            activity=discord.Game(name=ACTIVITY)
+            activity=discord.Game(name=ACTIVITY),
+            help_command=None
         )
         self.embed_color = Color.from_str(EMBED_COLOR)
 
@@ -42,7 +44,10 @@ class Bot(commands.AutoShardedBot):
     # ERROR HANDLER:
     async def on_app_command_error(self, interaction: discord.Interaction, error):
         if isinstance(error, WrongDateFormat):
-            return await interaction.followup.send("Wrong date format (dd.mm.yyyy hh:mm)", ephemeral=True)
+            return await interaction.followup.send(embed=ErrorEmbed("Wrong date format (dd.mm.yyyy hh:mm)"), ephemeral=True)
+        elif isinstance(error, NoDataFound):
+            embed = ErrorEmbed("Can't find any data! Please make sure the station exists")
+            return await interaction.followup.send(embed=embed, ephemeral=True)
         elif isinstance(error, discord.app_commands.CommandInvokeError):
             channel = await self.fetch_channel(1084802176464998450)
             await channel.send(f"Error:```{error}```")
@@ -53,6 +58,15 @@ class Bot(commands.AutoShardedBot):
         if message.author.bot:
             return
 
+class ErrorEmbed(discord.Embed):
+    def __init__(self, description):
+        super().__init__(
+            title="Error",
+            description=description,
+            color=discord.Color.red(),
+            timestamp=datetime.utcnow(),
+        )
+        #self.set_footer(text=f"{bot.version} • made with ❤️ by {bot.creator}", icon_url=bot.user.display_avatar.url)
 
 bot = Bot()
 

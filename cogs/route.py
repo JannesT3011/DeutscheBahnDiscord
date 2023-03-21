@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from utils import get_station_info, get_journey_info, format_dt, str_to_time, calc_delay, format_dt_for_api
+from utils import get_station_info, get_journey_info, format_dt, str_to_time, calc_delay, format_dt_for_api, NoDataFound
 from typing import Optional
 
 
@@ -102,7 +102,7 @@ class Route(commands.Cog):
         end_id = await get_station_info(end)
 
         if start_id == (0) or end_id == (0):
-            return await interaction.followup.send("No data found", ephemeral=True)
+            raise NoDataFound
 
         if date is not None and not edit:
             date = format_dt_for_api(date)
@@ -110,7 +110,7 @@ class Route(commands.Cog):
         journeys = await get_journey_info(start_id[0], end_id[0], date) 
 
         if len(journeys) == 0:
-            return await interaction.followup.send("No data found", ephemeral=True)
+            raise NoDataFound
 
         view = RouteView(interaction.user.id, journeys, index)
 
