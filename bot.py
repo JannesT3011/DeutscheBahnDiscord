@@ -54,7 +54,7 @@ class Bot(commands.AutoShardedBot):
         elif isinstance(error, discord.app_commands.CommandInvokeError):
             channel = await self.fetch_channel(1084802176464998450)
             await channel.send(f"Error:```{error}```")
-            return await interaction.followup.send("Something went wrong!", ephemeral=True)
+            return await interaction.followup.send(embed=ErrorEmbed("Something went wrong!"), ephemeral=True)
 
     # EVENTS:
     async def on_message(self, message: discord.Message):
