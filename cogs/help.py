@@ -13,14 +13,14 @@ class Help(commands.Cog):
         embed = discord.Embed(
             title="ℹ️ DBot - Help ℹ️",
             description="""
-            </help:1079497268740247675>
-            ↪️ View all commands
-            </route:1079497268740247672>
-            ↪️ Plan your DB route ||(e.g Hamburg to München)||
-            </departures:1079497268740247674>
-            ↪️ View the departure of given Station ||(e.g Hamburg Hbf)||
-            </traininfo:1079497268740247673>
-            ↪️ See infos about a given train ||(e.g ICE72)||
+</help:1079497268740247675>
+↪️ View all commands
+</route:1079497268740247672>
+↪️ Plan your DB route ||(e.g Hamburg to München)||
+</departures:1079497268740247674>
+↪️ View the departure of given Station ||(e.g Hamburg Hbf)||
+</traininfo:1079497268740247673>
+↪️ See infos about a given train ||(e.g ICE72)||
             """,
             color=self.bot.embed_color,
             url="https://github.com/JannesT3011/DeutscheBahnDiscord"
