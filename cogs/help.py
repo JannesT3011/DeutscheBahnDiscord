@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-  
+
 
 
 class Help(commands.Cog):
@@ -13,13 +13,13 @@ class Help(commands.Cog):
         embed = discord.Embed(
             title="ℹ️ DBot - Help ℹ️",
             description="""
-            </help:1081581674724335709>
+            </help:1079497268740247675>
             ↪️ View all commands
-            </route:1081581674724335706>
+            </route:1079497268740247672>
             ↪️ Plan your DB route ||(e.g Hamburg to München)||
-            </departures:1081581674724335708>
+            </departures:1079497268740247674>
             ↪️ View the departure of given Station ||(e.g Hamburg Hbf)||
-            </traininfo:1081581674724335707>
+            </traininfo:1079497268740247673>
             ↪️ See infos about a given train ||(e.g ICE72)||
             """,
             color=self.bot.embed_color,
@@ -27,9 +27,9 @@ class Help(commands.Cog):
         )
         embed.set_footer(text="DBot", icon_url=self.bot.user.display_avatar.url)
 
-        
+
         return await interaction.response.send_message(embed=embed, ephemeral=True)
-    
+
 
 async def setup(bot):
     await bot.add_cog(Help(bot))
