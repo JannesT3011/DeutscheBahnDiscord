@@ -16,7 +16,7 @@ class Bot(commands.AutoShardedBot):
             command_prefix="db.",
             description=DESCRIPTION,
             intents=intents,
-            activity=discord.Game(name=ACTIVITY),
+            activity=discord.Activity(name=ACTIVITY, type=discord.ActivityType.watching),
             help_command=None
         )
         self.embed_color = Color.from_str(EMBED_COLOR)

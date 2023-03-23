@@ -43,8 +43,8 @@ COGS = [
 ]
 
 # Bot misc
-ACTIVITY = "Deutsche Bahn Bot"
-DESCRIPTION= "DeutscheBahn Bot by Bambus#8446"
+ACTIVITY = ""
+DESCRIPTION= "DBot by Bambus#8446"
 EMBED_COLOR = "#a21917"
 ```
 2. Run the bot with `python3 bot.py`
@@ -62,3 +62,6 @@ EMBED_COLOR = "#a21917"
 - [X] multiple pages for /route 
 - [ ] and /departures
 - [ ] Watchlist for routes/trains/stations
+- [ ] specify deparutes more (only tram, bus ... > maybe with select, buttons)
+- [ ] station infos (address ...)
+- [ ] German bot (translation feature discord)
