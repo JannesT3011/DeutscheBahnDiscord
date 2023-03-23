@@ -34,6 +34,9 @@ class Departures(commands.Cog):
             
         data = await get_departure_data(station_id[0], onlylongdistance, duration*60, date)
         
+        if data == 0:
+            raise NoDataFound
+        
         embed = discord.Embed(
             title=f"{station_id[1]} Departures{longdistance_str}:{'*' if duration==1 else ''}",
             color=self.bot.embed_color

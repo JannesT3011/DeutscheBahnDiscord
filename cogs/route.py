@@ -109,7 +109,7 @@ class Route(commands.Cog):
         
         journeys = await get_journey_info(start_id[0], end_id[0], date) 
 
-        if len(journeys) == 0:
+        if len(journeys) == 0 or journeys == [0]:
             raise NoDataFound
 
         view = RouteView(interaction.user.id, journeys, index)
