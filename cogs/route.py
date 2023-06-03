@@ -26,11 +26,11 @@ class RouteView(discord.ui.View):
         next_button = discord.ui.Button(emoji="➡️")
         next_button.callback = self._next
         self.add_item(next_button)
-    
+
     async def _back(self, interaction: discord.Interaction):
         self.index = self.index - 1 if self.index != 0 else self.max
         if self.index == 0: # Somehow useless but doesnt work with this (idk why)
-            self.index = self.max 
+            self.index = self.max
         self.interaction = interaction
         self.pressed = True
         self.stop()
@@ -81,10 +81,10 @@ class Route(commands.Cog):
                     name=f"{stop['line']['name']} - {stop['direction']}",
                     value=f"**From:** {stop['origin']['name']} Gl.{stop['departurePlatform']}\n**Departure:** {dep_time} {dep_delay_str}\n**To:** {stop['destination']['name']} Gl.{stop['arrivalPlatform']}\n**Arrival:** {ar_time} {ar_delay_str}{load_factor}\n⬇️",
                     inline=False
-                ) 
+                )
             except:
                 continue # Skips "laufzeit"
-        
+
         embed.add_field(name="Price:", value="Can't get price!" if price is None else f"{price['amount']}€", inline=False)
         return embed
 
@@ -107,8 +107,8 @@ class Route(commands.Cog):
 
         if date is not None and not edit:
             date = format_dt_for_api(date)
-        
-        journeys = await get_journey_info(start_id[0], end_id[0], date, age, bahncard) 
+
+        journeys = await get_journey_info(start_id[0], end_id[0], date, age, bahncard)
 
         if len(journeys) == 0 or journeys == [0]:
             raise NoDataFound
