@@ -121,8 +121,9 @@ class Route(commands.Cog):
         if edit:
             await interaction.response.edit_message(embed=self.format_journey_info(start_id[1], end_id[1], route, price, view.index, len(journeys)), view=view)
         else:
-            view.message = await interaction.followup.send(embed=self.format_journey_info(start_id[1], end_id[1], route, price, index, len(journeys)), view=view)
+            await interaction.followup.send(embed=self.format_journey_info(start_id[1], end_id[1], route, price, index, len(journeys)), view=view)
 
+        view.message = await interaction.original_response()
         await view.wait()
 
         interaction = view.interaction
