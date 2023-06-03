@@ -128,7 +128,7 @@ class Route(commands.Cog):
         interaction = view.interaction
 
         if view.pressed:
-            return await self.route_backend(interaction, start, end, date, edit=True, index=view.index)
+            return await self.route_backend(interaction, start, end, date, edit=True, index=view.index, age=age, bahncard=bahncard)
 
 
 async def setup(bot):
