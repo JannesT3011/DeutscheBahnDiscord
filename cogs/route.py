@@ -2,8 +2,9 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from utils import get_station_info, get_journey_info, format_dt, str_to_time, calc_delay, format_dt_for_api, NoDataFound
-from typing import Optional
+from typing import Optional, Literal
 
+bahncards = ["bahncard-1st-25", "bahncard-2nd-25", "bahncard-1st-50", "bahncard-2nd-50"]
 
 class RouteView(discord.ui.View):
 
@@ -89,17 +90,19 @@ class Route(commands.Cog):
 
 
     @app_commands.command(name='route', description="Plan your DB route!") # Later departure
-    @app_commands.describe(start="The start train station", end="The end destination of your trip", date="Departure of your route (dd-mm-yy HH:MM)")
-    async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]):
+    @app_commands.describe(start="The start train station", end="The end destination of your trip", date="Departure of your route (dd-mm-yy HH:MM)", age="Age of traveler", bahncard="Bahncard")
+    async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]=None, age: Optional[app_commands.Range[int, 1, 99]]=None, bahncard: Optional[Literal["bahncard-1st-25", "bahncard-2nd-25", "bahncard-1st-50", "bahncard-2nd-50"]]=None):
         """GET INFOS ABOUT A ROUTE (START>END)"""
-        await self.route_backend(interaction, start, end, date)
+        await self.route_backend(interaction, start, end, date, bahncard=bahncard, age=age)
 
-    async def route_backend(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str], edit:bool=False, index=1):
+    async def route_backend(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]=None, edit:bool=False, index=1, bahncard=None, age=None):
+        print(start, end, date, bahncard,age)
         if not edit:
             await interaction.response.defer(thinking=True, ephemeral=True)
 
         start_id = await get_station_info(start)
         end_id = await get_station_info(end)
+        print(start_id)
 
         if start_id == (0) or end_id == (0):
             raise NoDataFound
@@ -107,7 +110,7 @@ class Route(commands.Cog):
         if date is not None and not edit:
             date = format_dt_for_api(date)
         
-        journeys = await get_journey_info(start_id[0], end_id[0], date) 
+        journeys = await get_journey_info(start_id[0], end_id[0], date, age, bahncard) 
 
         if len(journeys) == 0 or journeys == [0]:
             raise NoDataFound
