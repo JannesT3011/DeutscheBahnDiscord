@@ -96,13 +96,11 @@ class Route(commands.Cog):
         await self.route_backend(interaction, start, end, date, bahncard=bahncard, age=age)
 
     async def route_backend(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]=None, edit:bool=False, index=1, bahncard=None, age=None):
-        print(start, end, date, bahncard,age)
         if not edit:
             await interaction.response.defer(thinking=True, ephemeral=True)
 
         start_id = await get_station_info(start)
         end_id = await get_station_info(end)
-        print(start_id)
 
         if start_id == (0) or end_id == (0):
             raise NoDataFound

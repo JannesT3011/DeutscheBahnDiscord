@@ -38,5 +38,5 @@ async def get_journey_info(start: int, end: int, when=None, age:int=None, bahnca
                 return [0]
             
             data = await response.json()
-            print(data["journeys"])
+            
             return data["journeys"]
