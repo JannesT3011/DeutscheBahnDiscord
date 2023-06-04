@@ -52,16 +52,16 @@ EMBED_COLOR = "#a21917"
 ### Todos:
 - [X] add date to /route
 - [X] departures when
-- [ ] add loyaltyCard 
+- [X] add loyaltyCard 
 - [ ] price analyze
 - [ ] reminder for cheap prices
 - [ ] reminder for journy 
 - [ ] Price Calander (like bahn.guru)
-- [ ] /price from to age card
 - [X] add duration to /route
 - [X] multiple pages for /route 
 - [ ] and /departures
 - [ ] Watchlist for routes/trains/stations
-- [ ] specify deparutes more (only tram, bus ... > maybe with select, buttons)
+- [ ] specify deparutes more (only tram, bus ... > maybe with select, buttons) https://www.youtube.com/watch?v=uY5n82JBlkI
 - [ ] station infos (address ...)
 - [ ] German bot (translation feature discord)
+- [X] Pin route
