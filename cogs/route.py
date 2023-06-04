@@ -8,7 +8,7 @@ bahncards = ["bahncard-1st-25", "bahncard-2nd-25", "bahncard-1st-50", "bahncard-
 
 class RouteView(discord.ui.View):
 
-    def __init__(self, user: int, routes: list, index):
+    def __init__(self, user: int, routes: list, index, guild:bool):
         super(RouteView, self).__init__(
             timeout=120
         )
@@ -27,6 +27,13 @@ class RouteView(discord.ui.View):
         next_button.callback = self._next
         self.add_item(next_button)
 
+        if not guild:
+            save_button = discord.ui.Button(emoji="📌")
+            save_button.callback = self._save
+            self.add_item(save_button)
+
+        fav_button = discord.ui.Button(emoji="⭐")
+
     async def _back(self, interaction: discord.Interaction):
         self.index = self.index - 1 if self.index != 0 else self.max
         if self.index == 0: # Somehow useless but doesnt work with this (idk why)
@@ -37,6 +44,14 @@ class RouteView(discord.ui.View):
 
     async def _next(self, interaction: discord.Interaction):
         self.index = self.index + 1 if self.index != self.max else 1
+        self.interaction = interaction
+        self.pressed = True
+        self.stop()
+
+    async def _save(self, interaction: discord.Interaction):
+        channel = interaction.channel
+        route = await channel.fetch_message(self.message.id)
+        await route.pin()
         self.interaction = interaction
         self.pressed = True
         self.stop()
@@ -97,7 +112,8 @@ class Route(commands.Cog):
 
     async def route_backend(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]=None, edit:bool=False, index=1, bahncard=None, age=None):
         if not edit:
-            await interaction.response.defer(thinking=True, ephemeral=True)
+            ephemeral = True if interaction.guild else False
+            await interaction.response.defer(thinking=True, ephemeral=ephemeral)
 
         start_id = await get_station_info(start)
         end_id = await get_station_info(end)
@@ -113,17 +129,20 @@ class Route(commands.Cog):
         if len(journeys) == 0 or journeys == [0]:
             raise NoDataFound
 
-        view = RouteView(interaction.user.id, journeys, index)
+        view = RouteView(interaction.user.id, journeys, index, interaction.guild)
 
         route = journeys[index-1]["legs"]
         price = journeys[index-1]["price"]
 
         if edit:
-            await interaction.response.edit_message(embed=self.format_journey_info(start_id[1], end_id[1], route, price, view.index, len(journeys)), view=view)
+            embed = self.format_journey_info(start_id[1], end_id[1], route, price, view.index, len(journeys))
+            msg = await interaction.response.edit_message(embed=embed, view=view)
         else:
-            await interaction.followup.send(embed=self.format_journey_info(start_id[1], end_id[1], route, price, index, len(journeys)), view=view)
+            embed = self.format_journey_info(start_id[1], end_id[1], route, price, index, len(journeys))
+            msg = await interaction.followup.send(embed=embed, view=view)
 
         view.message = await interaction.original_response()
+
         await view.wait()
 
         interaction = view.interaction
