@@ -61,7 +61,7 @@ EMBED_COLOR = "#a21917"
 - [X] multiple pages for /route 
 - [ ] and /departures
 - [ ] Watchlist for routes/trains/stations
-- [ ] specify deparutes more (only tram, bus ... > maybe with select, buttons) https://www.youtube.com/watch?v=uY5n82JBlkI
+- [ ] specify deparutes more (only tram, bus)
 - [ ] station infos (address ...)
 - [ ] German bot (translation feature discord)
 - [X] Pin route
