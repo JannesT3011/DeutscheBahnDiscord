@@ -103,7 +103,7 @@ class Route(commands.Cog):
 
 
     @app_commands.command(name='route', description="Plan your DB route!") # Later departure
-    @app_commands.describe(start="The start train station", end="The end destination of your trip", date="Departure of your route (dd-mm-yy HH:MM)", age="Age of traveler", bahncard="Bahncard")
+    @app_commands.describe(start="The start train station", end="The end destination of your trip", date="Departure of your route (dd.mm.yy HH:MM)", age="Age of traveler", bahncard="Bahncard")
     async def route_command(self, interaction: discord.Interaction, start: str, end: str, date: Optional[str]=None, age: Optional[app_commands.Range[int, 1, 99]]=None, bahncard: Optional[Literal["bahncard-1st-25", "bahncard-2nd-25", "bahncard-1st-50", "bahncard-2nd-50"]]=None):
         """GET INFOS ABOUT A ROUTE (START>END)"""
         await self.route_backend(interaction, start, end, date, bahncard=bahncard, age=age)

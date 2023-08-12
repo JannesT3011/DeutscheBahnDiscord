@@ -11,7 +11,7 @@ class Departures(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name='departures', description="Departure of given Station")
-    @app_commands.describe(station="The Station you want to see the departures", onlylongdistance="Only show long distance Trains", duration="Period of time (hours)", date="Date (dd-mm-yy HH:MM)")
+    @app_commands.describe(station="The Station you want to see the departures", onlylongdistance="Only show long distance Trains", duration="Period of time (hours)", date="Date (dd.mm.yy HH:MM)")
     async def departures_command(self, 
                                  interaction: discord.Interaction, 
                                  station: str, 
