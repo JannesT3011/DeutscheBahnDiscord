@@ -42,12 +42,13 @@ class NoDataFound(discord.app_commands.AppCommandError):
 class NoTrainFound(discord.app_commands.AppCommandError):
     pass
 
-def format_dt_for_api(time) -> str:
+def format_dt_for_api(time, hours:int=2) -> str:
     """
     FORMAT GIVEN TIME TO CORRECT API TIME (%m.%d.%y %H:%M")
     """
     try:    
-        dt = datetime.strptime(time, "%d.%m.%y %H:%M") - timedelta(hours=2)
-        return datetime.strftime(dt, "%m.%d.%y %H:%M")
-    except:
+        dt = datetime.strptime(time, "%d.%m.%Y %H:%M") - timedelta(hours=hours)
+        return datetime.strftime(dt, "%m.%d.%Y %H:%M")
+    except Exception as err:
+        print(err)
         raise WrongDateFormat 
